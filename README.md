@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # buddy
 
 A new Flutter project.
@@ -15,3 +16,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# DesktopChuds
+Desktop's decoration-gif,img,video
+>>>>>>> ac8063a7da474a59aabe94cc0b8f627ebc812caf
