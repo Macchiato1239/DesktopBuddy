@@ -16,17 +16,22 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
 
-        let channel = FlutterMethodChannel(
+        let overlayChannel = FlutterMethodChannel(
             name: "overlay_window",
             binaryMessenger: controller.engine.binaryMessenger
         )
-
-        channel.setMethodCallHandler { call, result in
+        overlayChannel.setMethodCallHandler { call, result in
 
             switch call.method {
 
             case "showOverlay":
                 self.createOverlay()
+                print("Main:", self.mainFlutterWindow as Any)
+                print("Overlay:", self.overlayWindow as Any)
+                result(nil as Any?)
+            
+            case "destroyOverlay":
+                self.destroyOverlay()
                 result(nil as Any?)
 
             default:
@@ -51,7 +56,9 @@ class AppDelegate: FlutterAppDelegate {
               width: 200,
               height: 200
           ),
-          styleMask: [.borderless],
+          styleMask:[
+            .borderless,
+            ],
           backing: .buffered,
           defer: false
       )
@@ -78,6 +85,10 @@ class AppDelegate: FlutterAppDelegate {
 
       overlayWindow = window
 
-      window.makeKeyAndOrderFront(nil)
+      window.orderFront(nil)
   }
+    func destroyOverlay() {
+        overlayWindow?.orderOut(nil)
+        overlayWindow = nil
+    }
 }

@@ -2,41 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 //----------------------------------
 const overlayChannel = MethodChannel('overlay_window');
-
-void showOverlay() async {
+Future<void> showOverlay() async {
   await overlayChannel.invokeMethod('showOverlay');
 }
-//----------------------------------
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
+Future<void> destroyOverlay() async {
+  print("Destroy button pressed");
+  await overlayChannel.invokeMethod('destroyOverlay');
 }
 //----------------------------------
-class _MyAppState extends State<MyApp> {
-  String changingtext = 'Tung';
-
-  void changeText() {
-    setState(() {
-      if (changingtext == 'Tung') {
-        changingtext = 'Tung Tung';
-      } else {
-        changingtext = 'Tung Tung Sahur';
-      }
-    });
-  }
-
+//----------------------------------
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text(changingtext),
+          title: Text('Master Window'),
           centerTitle: true,
         ),
         body: Stack(
@@ -49,6 +34,14 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('+'),
               ),
             ),
+            Positioned(
+              top: 20,
+              left: 100,
+              child: ElevatedButton(
+                onPressed: destroyOverlay,
+                child: const Text('-'),
+              ),
+            )
           ],
         ),
       ),
