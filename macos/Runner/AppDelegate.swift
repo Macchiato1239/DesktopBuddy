@@ -49,7 +49,7 @@ class AppDelegate: FlutterAppDelegate {
           return
       }
 
-      let window = NSWindow(
+      let window = NSPanel(
           contentRect: NSRect(
               x: 500,
               y: 500,
@@ -58,15 +58,21 @@ class AppDelegate: FlutterAppDelegate {
           ),
           styleMask:[
             .borderless,
+            .nonactivatingPanel
             ],
           backing: .buffered,
           defer: false
       )
 
-      window.isOpaque = false
-      window.backgroundColor = .clear
-      window.level = .floating
-      window.collectionBehavior = [.canJoinAllSpaces]
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.level = .floating
+        window.collectionBehavior = [
+            .canJoinAllSpaces,
+            .fullScreenAuxiliary
+        ]
+        window.ignoresMouseEvents = false
+        window.hidesOnDeactivate = false
 
       // TEST CONTENT
       let view = NSView(
