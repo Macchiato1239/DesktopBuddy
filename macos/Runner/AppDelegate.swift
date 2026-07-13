@@ -4,7 +4,7 @@ import FlutterMacOS
 @main
 class AppDelegate: FlutterAppDelegate {
 
-    var overlayWindow: NSWindow?
+    var overlayWindow: NSPanel?
 
     override func applicationDidFinishLaunching(
         _ notification: Notification
@@ -34,6 +34,12 @@ class AppDelegate: FlutterAppDelegate {
                 self.destroyOverlay()
                 result(nil as Any?)
 
+            case "addImage":
+                DispatchQueue.main.async {
+                    print("image added")
+                    self.addImage()
+                }
+                result(nil as Any?)
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -49,30 +55,31 @@ class AppDelegate: FlutterAppDelegate {
           return
       }
 
-      let window = NSPanel(
+      let inviswindow = NSPanel( //Variable for the child transparent frame
           contentRect: NSRect(
-              x: 500,
+              x: 100,
               y: 500,
               width: 200,
               height: 200
           ),
           styleMask:[
             .borderless,
+            .titled,
             .nonactivatingPanel
             ],
           backing: .buffered,
           defer: false
       )
 
-        window.isOpaque = false
-        window.backgroundColor = .clear
-        window.level = .floating
-        window.collectionBehavior = [
+        inviswindow.isOpaque = false
+        inviswindow.backgroundColor = .clear
+        inviswindow.level = .floating
+        inviswindow.collectionBehavior = [
             .canJoinAllSpaces,
             .fullScreenAuxiliary
         ]
-        window.ignoresMouseEvents = false
-        window.hidesOnDeactivate = false
+        inviswindow.ignoresMouseEvents = false
+        inviswindow.hidesOnDeactivate = false
 
       // TEST CONTENT
       let view = NSView(
@@ -85,16 +92,30 @@ class AppDelegate: FlutterAppDelegate {
       )
 
       view.wantsLayer = true
-      view.layer?.backgroundColor = NSColor.red.cgColor
+      inviswindow.contentView = view
 
-      window.contentView = view
+      overlayWindow = inviswindow //to check if the overlay window already exists or not.
 
-      overlayWindow = window
-
-      window.orderFront(nil)
+      inviswindow.orderFront(nil)
   }
-    func destroyOverlay() {
-        overlayWindow?.orderOut(nil)
-        overlayWindow = nil
+    func destroyOverlay() {//Destroy all overlay window?//Later should use a key detection
+    // to identify the specific overlay window chosen to be killed
+        overlayWindow?.close()
+        overlayWindow=nil
+    }
+    func addImage() {
+        let image1=NSImageView(frame: NSRect(
+            x: 0,
+            y: 0,
+            width: 200,
+            height: 200
+        ))
+        let image1_image=NSImage(named: "TestIcon")
+        image1.image=image1_image
+        print("Image:", image1_image as Any)
+        image1.imageScaling = .scaleProportionallyUpOrDown
+        overlayWindow?.contentView?.addSubview(image1)
+        image1.frame = overlayWindow!.contentView!.bounds
     }
 }
+

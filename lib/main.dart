@@ -13,6 +13,10 @@ Future<void> destroyOverlay() async {
   print("Destroy button pressed");
   await overlayChannel.invokeMethod('destroyOverlay');
 }
+Future<void> addImage() async {
+  print("Png added");
+  await overlayChannel.invokeMethod('addImage');
+}
 //----------------------------------
 //----------------------------------
 class MyApp extends StatelessWidget {
@@ -40,6 +44,14 @@ class MyApp extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: destroyOverlay,
                 child: const Text('-'),
+              ),
+            ),
+            Positioned(
+              top: 20,
+              left: 180,
+              child: ElevatedButton(
+                onPressed: addImage,
+                child: const Text('Tung'),
               ),
             )
           ],
