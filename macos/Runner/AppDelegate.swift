@@ -1,10 +1,13 @@
 import Cocoa
 import FlutterMacOS
-
+import AppKit
+import SwiftUI
+import UniformTypeIdentifiers
 @main
 class AppDelegate: FlutterAppDelegate {
 
     var overlayWindow: NSPanel?
+    var imageAdded: Bool = false
 
     override func applicationDidFinishLaunching(
         _ notification: Notification
@@ -35,10 +38,13 @@ class AppDelegate: FlutterAppDelegate {
                 result(nil as Any?)
 
             case "addImage":
-                DispatchQueue.main.async {
-                    print("image added")
-                    self.addImage()
-                }
+                print("image added")
+                self.addImage()
+                result(nil as Any?)
+            
+            case "ImportImg":
+                print("Importing 2")
+                self.ImportImg()
                 result(nil as Any?)
             default:
                 result(FlutterMethodNotImplemented)
@@ -102,8 +108,13 @@ class AppDelegate: FlutterAppDelegate {
     // to identify the specific overlay window chosen to be killed
         overlayWindow?.close()
         overlayWindow=nil
+        imageAdded = false
     }
     func addImage() {
+        if imageAdded {
+            return
+        }
+        else{
         let image1=NSImageView(frame: NSRect(
             x: 0,
             y: 0,
@@ -116,6 +127,57 @@ class AppDelegate: FlutterAppDelegate {
         image1.imageScaling = .scaleProportionallyUpOrDown
         overlayWindow?.contentView?.addSubview(image1)
         image1.frame = overlayWindow!.contentView!.bounds
+        imageAdded = true
+    }}
+    //importing from local files
+    func ImportImg() { 
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Choose an image to attach"
+        openPanel.showsResizeIndicator = true
+        openPanel.showsHiddenFiles = false
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = false
+        openPanel.allowsMultipleSelection = false
+
+        //file types RESTRICTION
+        openPanel.allowedContentTypes = [.png, .gif]
+
+        //----------------------------
+
+        guard let window = overlayWindow else {
+            print("Error: No window found to present the file panel on.")
+            return
+        }
+        openPanel.beginSheetModal(for: window) { [weak self] response in
+        // If the user clicked "Open" (and didn't cancel)
+        if response == .OK, let selectedURL = openPanel.url {
+            print("User selected file: \(selectedURL.path)")
+            
+            // 5. Hand the URL off to your image importer
+            self?.importSelectedImage(from: selectedURL)
+            }
+        }
+    }
+    func importSelectedImage(from url: URL) {
+    guard let contentView = overlayWindow?.contentView else {
+        print("Error: No overlayWindow")
+        return
+    }
+    
+    // Load the image from the user-selected URL
+    if let image = NSImage(contentsOf: url) {
+        // Remove old image views if you only want one active image
+        contentView.subviews.forEach { if $0 is NSImageView { $0.removeFromSuperview() } }
+        
+        let image2 = NSImageView(frame: contentView.bounds)
+        image2.image = image
+        image2.imageScaling = .scaleProportionallyUpOrDown
+        image2.autoresizingMask = [.width, .height]
+        overlayWindow?.contentView?.addSubview(image2)
+        imageAdded = true
+    } else {
+        print("Could not load selected image")
+        }
     }
 }
 

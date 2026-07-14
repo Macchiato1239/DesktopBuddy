@@ -17,6 +17,10 @@ Future<void> addImage() async {
   print("Png added");
   await overlayChannel.invokeMethod('addImage');
 }
+Future<void> import() async {
+  print("Importing");
+  await overlayChannel.invokeMethod('ImportImg');
+}
 //----------------------------------
 //----------------------------------
 class MyApp extends StatelessWidget {
@@ -52,6 +56,14 @@ class MyApp extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: addImage,
                 child: const Text('Tung'),
+              ),
+            ),
+            Positioned(
+              top: 20,
+              left: 280,
+              child: ElevatedButton(
+                onPressed: import,
+                child: const Text('Import'),
               ),
             )
           ],
