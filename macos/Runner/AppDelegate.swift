@@ -4,27 +4,28 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 @main
-class AppDelegate: FlutterAppDelegate {
 
+
+class AppDelegate: FlutterAppDelegate {
     var overlayWindow: NSPanel?
     var imageAdded: Bool = false
 
     override func applicationDidFinishLaunching(
         _ notification: Notification
     ) {
-
         guard let window = mainFlutterWindow,
               let controller = window.contentViewController as? FlutterViewController
         else {
             return
         }
 
+// ###SECTION: HEARING MESSAGES FROM DART
+
         let overlayChannel = FlutterMethodChannel(
             name: "overlay_window",
             binaryMessenger: controller.engine.binaryMessenger
         )
         overlayChannel.setMethodCallHandler { call, result in
-
             switch call.method {
 
             case "showOverlay":
@@ -48,6 +49,10 @@ class AppDelegate: FlutterAppDelegate {
 
         super.applicationDidFinishLaunching(notification)
     }
+
+/// ## FUNCTIONS
+
+/// ### CREATING AN OVERLAY to import images/gifs into it
 
   func createOverlay() {
 
@@ -99,14 +104,20 @@ class AppDelegate: FlutterAppDelegate {
 
       inviswindow.orderFront(nil)
   }
+
+/// ### DESTROYING THE OVERLAY
+
     func destroyOverlay() {//Destroy all overlay window?//Later should use a key detection
     // to identify the specific overlay window chosen to be killed
         overlayWindow?.close()
         overlayWindow=nil
         imageAdded = false
     }
-    //importing from local files
-    func ImportImg() { 
+
+
+/// ### Importing a supported file types [PNG, GIF] into the created OVERLAY
+
+    func ImportImg() { //OPEN THE OS's NATIVE LOCAL FILES BROWSER
         let openPanel = NSOpenPanel()
         openPanel.title = "Choose an image to attach"
         openPanel.showsResizeIndicator = true
@@ -125,15 +136,20 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
         openPanel.beginSheetModal(for: window) { [weak self] response in
+
         // If the user clicked "Open" (and didn't cancel)
+
         if response == .OK, let selectedURL = openPanel.url {
             print("User selected file: \(selectedURL.path)")
             
             // 5. Hand the URL off to your image importer
-            self?.importSelectedImage(from: selectedURL)
+            self?.importSelectedImage(from: selectedURL) //SEND TO THE DISPLAY FUNC
             }
         }
     }
+
+/// ###LOAD THE FILE INTO AN NSImage and PUT IT IN THE OVERLAY
+
     func importSelectedImage(from url: URL) {
     guard let contentView = overlayWindow?.contentView else {
         print("Error: No overlayWindow")
@@ -145,6 +161,7 @@ class AppDelegate: FlutterAppDelegate {
         // Remove old image views if you only want one active image
         contentView.subviews.forEach { if $0 is NSImageView { $0.removeFromSuperview() } }
         
+    //START CREATING THE IMAGE-->Use the class draggableImageView to make it draggable
         let image2 = DraggableImageView(frame: contentView.bounds)
         image2.image = image
         image2.imageScaling = .scaleProportionallyUpOrDown
@@ -156,6 +173,9 @@ class AppDelegate: FlutterAppDelegate {
         }
     }
 }
+//------------------------------------------------------
+
+
 
 class DraggableImageView: NSImageView {
 

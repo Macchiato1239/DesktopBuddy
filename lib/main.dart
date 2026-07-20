@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 void main() {
   runApp(MyApp());
 }
-//----------------------------------
+//---------------------------------- 
+/// ## SECTION: SENDING MESSAGES TO SWIFT CHANNEL
 const overlayChannel = MethodChannel('overlay_window');
 Future<void> showOverlay() async {
   await overlayChannel.invokeMethod('showOverlay');
@@ -17,6 +18,7 @@ Future<void> import() async {
 }
 //----------------------------------
 //----------------------------------
+/// ## SECTION: BUTTONS 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
