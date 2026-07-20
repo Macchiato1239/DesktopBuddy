@@ -37,11 +37,6 @@ class AppDelegate: FlutterAppDelegate {
                 self.destroyOverlay()
                 result(nil as Any?)
 
-            case "addImage":
-                print("image added")
-                self.addImage()
-                result(nil as Any?)
-            
             case "ImportImg":
                 print("Importing 2")
                 self.ImportImg()
@@ -70,7 +65,6 @@ class AppDelegate: FlutterAppDelegate {
           ),
           styleMask:[
             .borderless,
-            .titled,
             .nonactivatingPanel
             ],
           backing: .buffered,
@@ -80,6 +74,7 @@ class AppDelegate: FlutterAppDelegate {
         inviswindow.isOpaque = false
         inviswindow.backgroundColor = .clear
         inviswindow.level = .floating
+        inviswindow.isMovableByWindowBackground = true
         inviswindow.collectionBehavior = [
             .canJoinAllSpaces,
             .fullScreenAuxiliary
@@ -110,25 +105,6 @@ class AppDelegate: FlutterAppDelegate {
         overlayWindow=nil
         imageAdded = false
     }
-    func addImage() {
-        if imageAdded {
-            return
-        }
-        else{
-        let image1=NSImageView(frame: NSRect(
-            x: 0,
-            y: 0,
-            width: 200,
-            height: 200
-        ))
-        let image1_image=NSImage(named: "TestIcon")
-        image1.image=image1_image
-        print("Image:", image1_image as Any)
-        image1.imageScaling = .scaleProportionallyUpOrDown
-        overlayWindow?.contentView?.addSubview(image1)
-        image1.frame = overlayWindow!.contentView!.bounds
-        imageAdded = true
-    }}
     //importing from local files
     func ImportImg() { 
         let openPanel = NSOpenPanel()
@@ -169,7 +145,7 @@ class AppDelegate: FlutterAppDelegate {
         // Remove old image views if you only want one active image
         contentView.subviews.forEach { if $0 is NSImageView { $0.removeFromSuperview() } }
         
-        let image2 = NSImageView(frame: contentView.bounds)
+        let image2 = DraggableImageView(frame: contentView.bounds)
         image2.image = image
         image2.imageScaling = .scaleProportionallyUpOrDown
         image2.autoresizingMask = [.width, .height]
@@ -179,5 +155,13 @@ class AppDelegate: FlutterAppDelegate {
         print("Could not load selected image")
         }
     }
+}
+
+class DraggableImageView: NSImageView {
+
+    override func mouseDown(with event: NSEvent) {
+        window?.performDrag(with: event)
+    }
+
 }
 
