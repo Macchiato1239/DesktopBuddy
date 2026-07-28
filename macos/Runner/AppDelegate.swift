@@ -30,12 +30,22 @@ class AppDelegate: FlutterAppDelegate {
             switch call.method {
             
             case "ImportImg":
-                if let args = call.arguments as? [String: Any],
-                let index = args["index"] as? Int {
-
-                    self.ImportImg(index: index)
+                guard let args = call.arguments as? [String: Any],
+                    let index = args["index"] as? Int else {
+                    result(FlutterError(
+                        code: "INVALID_ARGS",
+                        message: "Missing index",
+                        details: nil))
+                    return
                 }
+
+                let imageName = args["imageName"] as? String
+
+                self.ImportImg(index: index, imageName: imageName)
+
                 result(nil)
+
+
 
             case "destroyOverlay":
                 if let args = call.arguments as? [String: Any],
@@ -79,11 +89,12 @@ class AppDelegate: FlutterAppDelegate {
         window.level = .floating
         window.isMovableByWindowBackground = true
         window.collectionBehavior = [
+            .stationary, //reduces the flicker whenever switching between windows on macbook.
             .canJoinAllSpaces,
             .fullScreenAuxiliary
         ]
         window.ignoresMouseEvents = false
-        window.hidesOnDeactivate = false
+        window.hidesOnDeactivate = false //
 
       // TEST CONTENT
       let view = NSView(
@@ -111,66 +122,68 @@ class AppDelegate: FlutterAppDelegate {
 
 
 /// ### Importing a supported file types [PNG, GIF] into the created OVERLAY
+    func ImportImg(index: Int, imageName: String?) {
+        if let imageName = imageName {
 
-    func ImportImg(index:Int) {
+            createOverlay(index: index)
 
-        guard let window = mainFlutterWindow else {
+            guard let image = NSImage(named: imageName) else {
+                print("Couldn't load image named \(imageName)")
+                return
+            }
+
+            displayImage(image, index: index)
+
+        } else {
+
+            guard let window = mainFlutterWindow else {
+                return
+            }
+
+            let openPanel = NSOpenPanel()
+            // ...
+
+            openPanel.beginSheetModal(for: window) { [weak self] response in
+                if response == .OK,
+                let selectedURL = openPanel.url {
+
+                    self?.createOverlay(index: index)
+                    self?.importSelectedImage(from: selectedURL, index: index)
+                }
+            }
+        }
+    }
+//
+
+    func displayImage(_ image: NSImage, index: Int) {
+        guard let contentView = layerCollection[index]?.contentView else {
+            print("No overlay for index \(index)")
             return
         }
 
-        let openPanel = NSOpenPanel()
-
-        openPanel.title = "Choose an image to attach"
-        openPanel.showsResizeIndicator = true
-        openPanel.showsHiddenFiles = false
-        openPanel.canChooseFiles = true
-        openPanel.canChooseDirectories = false
-        openPanel.allowsMultipleSelection = false
-
-        openPanel.allowedContentTypes = [.png, .gif]
-
-
-        openPanel.beginSheetModal(
-            for: window
-        ) { [weak self] response in
-
-            if response == .OK,
-            let selectedURL = openPanel.url {
-
-                self?.createOverlay(index:index)
-
-                self?.importSelectedImage(
-                    from: selectedURL,
-                    index:index
-                )
+        contentView.subviews.forEach {
+            if $0 is NSImageView {
+                $0.removeFromSuperview()
             }
-
         }
+
+        let imageView = DraggableImageView(frame: contentView.bounds)
+        imageView.image = image
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.autoresizingMask = [.width, .height]
+
+        contentView.addSubview(imageView)
+        imageAdded = true
     }
 
 /// ###LOAD THE FILE INTO AN NSImage and PUT IT IN THE OVERLAY
 
-    func importSelectedImage(from url: URL, index:Int) {
-    guard let contentView = layerCollection[index]?.contentView else {
-        print("No overlay for index \(index)")
-        return
-    }
-        
-    // Load the image from the user-selected URL
-    if let image = NSImage(contentsOf: url) {
-        // Remove old image views if you only want one active image
-        contentView.subviews.forEach { if $0 is NSImageView { $0.removeFromSuperview() } }
-        
-    //START CREATING THE IMAGE-->Use the class draggableImageView to make it draggable
-        let image2 = DraggableImageView(frame: contentView.bounds)
-        image2.image = image
-        image2.imageScaling = .scaleProportionallyUpOrDown
-        image2.autoresizingMask = [.width, .height]
-        contentView.addSubview(image2)
-        imageAdded = true
-    } else {
-        print("Could not load selected image")
+    func importSelectedImage(from url: URL, index: Int) {
+        guard let image = NSImage(contentsOf: url) else {
+            print("Could not load selected image")
+            return
         }
+        displayImage(image, index: index)
     }
 }
 //------------------------------------------------------

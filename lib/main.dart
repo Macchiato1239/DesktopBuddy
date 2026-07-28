@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(800, 600),
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+
+    // Disable resizing
+    await windowManager.setResizable(false);
+  });
+
   runApp(MyApp());
 }
 //---------------------------------- 
@@ -45,6 +62,21 @@ Future<void> import() async {
   );
 }
 
+Future<void> builtinLayer(String name) async {
+  final id = nextId++;
+
+  Layer.addLayer(LayerData(id, name));
+
+  await overlayChannel.invokeMethod(
+    "ImportImg",
+    {
+      "index": id,
+      "imageName": name,
+    },
+  );
+}
+
+//Deleting targeted layers
 Future<void> delete(int id) async {
   Layer.removeLayerById(id);
 
@@ -63,11 +95,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Master Window'),
+          title: Text('Desktop Buddies!'),
           centerTitle: true,
         ),
         body: Stack(
-          children: [
+          children: [ //IMPORT BUTTON
             Positioned(
               top: 20,
               left: 280,
@@ -80,6 +112,11 @@ class MyApp extends StatelessWidget {
               top:20,
               left: 500,
               child: LayerList()
+            ),
+            Positioned(
+              top:0,
+              left:10,
+              child:Library()
             )
           ],
         ),
@@ -87,6 +124,58 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+//Library Section
+
+class Library extends StatelessWidget {
+  const Library({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 400,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 255, 255, 255),
+        border: Border.all(color: const Color.fromARGB(60, 0, 0, 0)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: const Center(
+              child: Text(
+                "Library",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(8),
+              children: [
+                ElevatedButton(
+                  onPressed: ()=>builtinLayer("TestIcon"),
+                  child: const Text("Chud 1"),
+                ),
+                ElevatedButton(
+                  onPressed: ()=>builtinLayer("flower"),
+                  child: const Text("Chud 2"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 //List of layers
 //AnimatedBuilder is responsible for updating
