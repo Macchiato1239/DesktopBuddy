@@ -43,6 +43,7 @@ class LayerList extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           child: ListView.builder(
+            padding: EdgeInsets.zero,
             itemCount: Layer.layers.length,
             itemBuilder: (context, index) {
               final layer = Layer.layers[index];

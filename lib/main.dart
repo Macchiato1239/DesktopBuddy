@@ -108,7 +108,7 @@ class MyApp extends StatelessWidget {
             Positioned(
               top:10,
               left:20,
-              child:CustomButton(text:"",onPressed: ()=>Lighting, width: 60, height: 60, top: 10, left: 20, pathfile: 'assets/PNGs/bencado.png')
+              child:CircularButton(text:"",onPressed: ()=>Lighting, width: 60, height: 60, top: 10, left: 20, pathfile: 'assets/PNGs/bencado.png')
             ),
           ],
         ),
