@@ -39,6 +39,6 @@ flutter:
 
   # Your buddy images, gifs, animations
   assets: 
-    - assets/images/
-    - assets/animations/
+    - assets/Gif/
+    - assets/PNGs/
   

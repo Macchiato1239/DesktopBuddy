@@ -4,7 +4,7 @@ import 'package:window_manager/window_manager.dart';
 import 'library.dart';
 import 'layer.dart';
 import 'buttons.dart';
-
+import 'background.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -78,30 +78,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: Text('Desktop Buddies!'),
           centerTitle: true,
         ),
         body: Stack(
-          children: [ //IMPORT BUTTON
+          children:[
+            //IMPORT BUTTON
             Positioned(
-              top: 20,
-              left: 280,
+              top: 60,
+              right:50,
               child: ElevatedButton(
                 onPressed: import,
                 child: const Text('Import'), // IT CNAJWOJNFIJOWAFIJOAFOIJW GO ANYWEHRE HHAHAHA
               ),
             ),
             Positioned(
-              top:20,
-              left: 500,
+              top:100,
+              right:50,
               child: LayerList()
             ),
             Positioned(
-              top:0,
-              left:10,
+              top:100,
+              left:20,
               child:Library()
-            )
+            ),
+            Positioned(
+              top:10,
+              left:20,
+              child:CustomButton(text:"",onPressed: ()=>Lighting, width: 60, height: 60, top: 10, left: 20, pathfile: 'assets/PNGs/bencado.png')
+            ),
           ],
         ),
       ),

@@ -1,8 +1,9 @@
-/// #THIS FILE CONTAINS THE CODE FOR THE LAYER MANAGER SECTION OF THE APP
-
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'main.dart';
+
+/// #THIS FILE CONTAINS THE CODE FOR THE LAYER MANAGER SECTION OF THE APP
+
 
 class LayerData {
   final int id;
