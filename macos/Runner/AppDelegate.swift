@@ -108,6 +108,7 @@ class AppDelegate: FlutterAppDelegate {
 
       view.wantsLayer = true
       window.contentView = view
+      window.hasShadow=false
 
       layerCollection[index]=window
       window.orderFront(nil)

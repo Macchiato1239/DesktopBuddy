@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; //open external websites
 //button builder
 class CustomButton extends StatelessWidget {
 
@@ -142,14 +143,26 @@ void Mute() {
   print("Mute");
 }
 
-void Github() {
-  print("Github");
+void Github() async {
+  final Uri url=Uri.parse("https://github.com/Macchiato1239");
+    if (!await launchUrl(
+    url,
+    mode: LaunchMode.externalApplication,
+  )) {
+    throw Exception('Could not launch $url');
+  } //Uri=unified resource identifier
 }
 
-void Instagram(){
-  print("Instagram");
+void Instagram() async{
+  final Uri url=Uri.parse("https://www.instagram.com/machiatto1239/");
+    if (!await launchUrl(
+    url,
+    mode: LaunchMode.externalApplication, //externalApplication=client's default browser
+  )) {
+    throw Exception('Could not launch $url');
+  } 
 }
 
-void Portfolio() {
-  print("Portfolio");
+void Portfolio() async{
+  print("Portfolio is still in development");
 }
