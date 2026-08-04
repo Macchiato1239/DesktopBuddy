@@ -88,6 +88,7 @@ class MyApp extends StatelessWidget {
           title: Text('Desktop Buddies!'),
           centerTitle: true,
         ),
+        backgroundColor: Colors.white,
         body: Stack(
           children:[
             //IMPORT BUTTON
@@ -121,7 +122,7 @@ class MyApp extends StatelessWidget {
               )
             ),
             Positioned(
-              top:30,
+              top:20,
               left:90,
               child:CircularBorderlessButton(
                 text:"",
@@ -139,43 +140,41 @@ class MyApp extends StatelessWidget {
               child: Text("Made by Leo",
               style: TextStyle(
                 color: Colors.grey,
-                fontSize: 15,
+                fontSize: 10,
               )
               ),
             ),
             //MEDIA
             Positioned(
               bottom: 10,
-              right: 60,
+              right: 20,
               child: Container(
                 width: 200,
-                height: 70,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                ),
+                height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        print("Github clicked");
-                      },
-                      child: Text("Github"),
+                    CircularBorderlessButton(
+                      text:"",
+                      onPressed: Github,
+                      width: 40,
+                      height: 40,
+                      pathfile: 'assets/icon/github.png'
                     ),
-
-                    GestureDetector(
-                      onTap: () {
-                        print("Discord clicked");
-                      },
-                      child: Text("Discord"),
+                    CircularBorderlessButton(
+                      text:"",
+                      onPressed: Instagram,
+                      width: 40,
+                      height: 40,
+                      pathfile: 'assets/icon/insta.png'
                     ),
-
-                    GestureDetector(
-                      onTap: () {
-                        print("Twitter clicked");
-                      },
-                      child: Text("Instagram")
+                    CircularBorderlessButton(
+                      text:"",
+                      onPressed: Portfolio,
+                      width: 40,
+                      height: 40,
+                      pathfile: 'assets/icon/portfolio.png'
                     ),
                   ],
                 ),

@@ -141,3 +141,15 @@ void Lighting() {
 void Mute() {
   print("Mute");
 }
+
+void Github() {
+  print("Github");
+}
+
+void Instagram(){
+  print("Instagram");
+}
+
+void Portfolio() {
+  print("Portfolio");
+}
