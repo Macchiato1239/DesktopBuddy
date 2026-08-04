@@ -33,12 +33,17 @@ dev_dependencies:
 
 
 flutter:
-
   # Enables Flutter's Material icons
   uses-material-design: true
 
   # Your buddy images, gifs, animations
-  assets: 
+  assets:
     - assets/Gif/
     - assets/PNGs/
-  
+    - assets/icon/
+  fonts:
+    - family: WorkSans
+      fonts:
+        - asset: assets/Font/WorkSans-Regular.ttf
+        - asset: assets/Font/WorkSans-Bold.ttf
+          weight: 700

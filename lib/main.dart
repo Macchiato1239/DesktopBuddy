@@ -5,6 +5,7 @@ import 'library.dart';
 import 'layer.dart';
 import 'buttons.dart';
 import 'background.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -77,6 +78,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'WorkSans',
+      ),
       home: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -106,9 +110,76 @@ class MyApp extends StatelessWidget {
               child:Library()
             ),
             Positioned(
-              top:10,
-              left:20,
-              child:CircularButton(text:"",onPressed: ()=>Lighting, width: 60, height: 60, top: 10, left: 20, pathfile: 'assets/PNGs/bencado.png')
+              top:20,
+              left:30,
+              child:CircularBorderlessButton(
+                text:"",
+                onPressed: ()=>Lighting,
+                width: 35,
+                height: 35,
+                pathfile: 'assets/icon/sun.png'
+              )
+            ),
+            Positioned(
+              top:30,
+              left:90,
+              child:CircularBorderlessButton(
+                text:"",
+                onPressed: ()=>Mute,
+                width: 35,
+                height: 35,
+                pathfile: 'assets/icon/volume.png'
+              )
+            ),
+
+            //CREDITS
+            Positioned(
+              bottom: 10,
+              left: 20,
+              child: Text("Made by Leo",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+              )
+              ),
+            ),
+            //MEDIA
+            Positioned(
+              bottom: 10,
+              right: 60,
+              child: Container(
+                width: 200,
+                height: 70,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print("Github clicked");
+                      },
+                      child: Text("Github"),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        print("Discord clicked");
+                      },
+                      child: Text("Discord"),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        print("Twitter clicked");
+                      },
+                      child: Text("Instagram")
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
