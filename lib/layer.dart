@@ -1,32 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'main.dart';
-
+import 'package:collection/collection.dart';
 /// #THIS FILE CONTAINS THE CODE FOR THE LAYER MANAGER SECTION OF THE APP
 
 
 class LayerData {
   final int id;
+  int? displayNumber;
   final String name;
 
-  LayerData(this.id, this.name);
+  LayerData({
+    required this.id,
+    this.displayNumber,
+    required this.name
+  });
 }
+
 
 class LayerManager extends ChangeNotifier {
   final List<LayerData> layers = [];
+  int _nextId = 0 ;
+  int _nextDisplayNumber = 1;
+  final PriorityQueue<int> _freeDisplayNumbers = PriorityQueue<int>();
 
-  void addLayer(LayerData layer) {
+  int reserveId() {
+    return _nextId++;
+  }
+  int _getNextDisplayNumber() {
+    if (_freeDisplayNumbers.isNotEmpty) {
+      return _freeDisplayNumbers.removeFirst();
+    }
+    return _nextDisplayNumber++;
+  }
+
+  void importSuccess(int id) {
+
+    final displayNumber = _getNextDisplayNumber();
+
+    layers.add(
+      LayerData(
+        id: id,
+        displayNumber: displayNumber,
+        name: "Layer $displayNumber",
+      ),
+    );
+
+    notifyListeners();
+  }
+
+  void addBuiltInLayer(LayerData layer) {
     layers.add(layer);
     notifyListeners();
   }
 
   void removeLayerById(int id) {
-    layers.removeWhere((layer) => layer.id == id);
+    final layer = layers.firstWhere(
+      (layer) => layer.id == id,
+    );
+
+    // Release the display number
+    if (layer.displayNumber!=null){
+    _freeDisplayNumbers.add(layer.displayNumber!);
+    }
+    layers.remove(layer);
+
     notifyListeners();
   }
 }
 
+//makes a focus constructor tmr, use it to change info of a layer (name, size, position, etc)
+/*
+class Focus extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height:80,
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5)
+      ),
+      child: Stack(
+        children: [
+          Positioned( //the layername
+            top:5,
+            left:5,
+            child: LayerName() 
+          ),
+          Positioned( //the layer size
+            left:5,
+            top: 30,
+            child: LayerSize()
+          ),
+          Positioned(
+            left: 70,
+            top: 30,
+            child: LayerPosition()
+          )
+        ]
+      )
+    );
+  }
+}
 
+class LayerName extends StatefulWidget {
+  const LayerName({super.key});
+
+  @override
+  State<LayerName> createState() => _LayerNameState();
+}
+
+class _LayerNameState extends State<LayerName> {
+  int count = 0;
+
+  void increment() {
+    setState(() {
+      count++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 150,
+      height: 20,
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5),
+      )
+      child: 
+    )
+  }
+}
+*/
 class LayerList extends StatelessWidget {
   const LayerList({super.key});
 

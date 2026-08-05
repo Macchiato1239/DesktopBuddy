@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 class AppDelegate: FlutterAppDelegate {
     var imageAdded: Bool = false
     var layerCollection: [Int: NSPanel] = [:]
+    var overlayChannel: FlutterMethodChannel?
     //start storing the overlays in a dict instead
     override func applicationDidFinishLaunching(
         _ notification: Notification
@@ -22,16 +23,16 @@ class AppDelegate: FlutterAppDelegate {
 
 // ###SECTION: HEARING MESSAGES FROM DART
 
-        let overlayChannel = FlutterMethodChannel(
+        overlayChannel = FlutterMethodChannel(
             name: "overlay_window",
             binaryMessenger: controller.engine.binaryMessenger
         )
-        overlayChannel.setMethodCallHandler { call, result in
+        overlayChannel?.setMethodCallHandler { call, result in
             switch call.method {
             
             case "ImportImg":
                 guard let args = call.arguments as? [String: Any],
-                    let index = args["index"] as? Int else {
+                    let id = args["id"] as? Int else {
                     result(FlutterError(
                         code: "INVALID_ARGS",
                         message: "Missing index",
@@ -41,7 +42,7 @@ class AppDelegate: FlutterAppDelegate {
 
                 let imageName = args["imageName"] as? String
 
-                self.ImportImg(index: index, imageName: imageName)
+                self.ImportImg(id: id, imageName: imageName)
 
                 result(nil)
 
@@ -49,9 +50,9 @@ class AppDelegate: FlutterAppDelegate {
 
             case "destroyOverlay":
                 if let args = call.arguments as? [String: Any],
-                let index = args["index"] as? Int {
+                let id = args["id"] as? Int {
 
-                    self.destroyOverlay(index: index)
+                    self.destroyOverlay(id: id)
                 }
                 result(nil)
             default:
@@ -68,7 +69,7 @@ class AppDelegate: FlutterAppDelegate {
 
 /// ### CREATING AN OVERLAY to import images/gifs into it
 
-  func createOverlay(index:Int) {
+  func createOverlay(id:Int) {
       let window = NSPanel( //Variable for the child transparent frame
           contentRect: NSRect(
               x: 100,
@@ -110,30 +111,30 @@ class AppDelegate: FlutterAppDelegate {
       window.contentView = view
       window.hasShadow=false
 
-      layerCollection[index]=window
+      layerCollection[id]=window //--saving the overlay to the dict with an index key
       window.orderFront(nil)
   }
 
 /// ### DESTROYING THE OVERLAY
 
-    func destroyOverlay(index:Int) {
-        layerCollection[index]?.close()
-        layerCollection.removeValue(forKey: index)
+    func destroyOverlay(id:Int) {
+        layerCollection[id]?.close()
+        layerCollection.removeValue(forKey: id)
     }
 
 
 /// ### Importing a supported file types [PNG, GIF] into the created OVERLAY
-    func ImportImg(index: Int, imageName: String?) {
+    func ImportImg(id: Int, imageName: String?) {
         if let imageName = imageName {
 
-            createOverlay(index: index)
+            createOverlay(id: id)
 
             guard let image = NSImage(named: imageName) else {
                 print("Couldn't load image named \(imageName)")
                 return
             }
 
-            displayImage(image, index: index)
+            displayImage(image, id: id)
 
         } else {
 
@@ -147,17 +148,24 @@ class AppDelegate: FlutterAppDelegate {
             openPanel.beginSheetModal(for: window) { [weak self] response in
                 if response == .OK,
                 let selectedURL = openPanel.url {
+                    //send a message to dart to save the display index and the id of the layer
+                    self?.createOverlay(id: id)
+                    self?.importSelectedImage(from: selectedURL, id: id)
 
-                    self?.createOverlay(index: index)
-                    self?.importSelectedImage(from: selectedURL, index: index)
+                    self?.overlayChannel?.invokeMethod(
+                        "ImportSuccess",
+                        arguments: [
+                            "id": id,
+                        ]
+                    )
                 }
             }
         }
     }
 //
 
-    func displayImage(_ image: NSImage, index: Int) {
-        guard let contentView = layerCollection[index]?.contentView else {
+    func displayImage(_ image: NSImage, id: Int) {
+        guard let contentView = layerCollection[id]?.contentView else {
             print("No overlay for index \(index)")
             return
         }
@@ -179,12 +187,12 @@ class AppDelegate: FlutterAppDelegate {
 
 /// ###LOAD THE FILE INTO AN NSImage and PUT IT IN THE OVERLAY
 
-    func importSelectedImage(from url: URL, index: Int) {
+    func importSelectedImage(from url: URL, id: Int) {
         guard let image = NSImage(contentsOf: url) else {
             print("Could not load selected image")
             return
         }
-        displayImage(image, index: index)
+        displayImage(image, id: id)
     }
 }
 //------------------------------------------------------

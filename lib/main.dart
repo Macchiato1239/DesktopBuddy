@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'library.dart';
 import 'layer.dart';
-import 'buttons.dart';
-import 'background.dart';
+import 'buttons.dart'; //implementing heap
 
+final Layer = LayerManager(); 
+const overlayChannel = MethodChannel('overlay_window');
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,39 +24,49 @@ void main() async {
     await windowManager.setResizable(false);
   });
 
+  //SWIFT TO DART LISTENER
+
+  overlayChannel.setMethodCallHandler((call) async {
+
+  switch (call.method) {
+
+    case "ImportSuccess":
+      final id = call.arguments["id"];
+      Layer.importSuccess(
+        id,
+      );
+
+      break;
+  }
+
+});
+
   runApp(MyApp());
 }
 //---------------------------------- 
-
-
-final Layer = LayerManager(); //use final to prevent accidental reassigment
+//use final to prevent accidental reassigment
 
 /// ## SECTION: SENDING MESSAGES TO SWIFT CHANNEL
-const overlayChannel = MethodChannel('overlay_window');
-int nextId = 0;
-
 Future<void> import() async {
-  final id = nextId++;
-
-  Layer.addLayer(
-    LayerData(id, "Layer $id"),
-  );
+  final id=Layer.reserveId();
 
   await overlayChannel.invokeMethod(
     "ImportImg",
-    {"index": id},
+    {"id": id},
   );
 }
 
 Future<void> builtinLayer(String name) async {
-  final id = nextId++;
-
-  Layer.addLayer(LayerData(id, name));
-
+  final id = Layer.reserveId(); //unique identifier
+  Layer.addBuiltInLayer(LayerData(
+    id: id,
+    name: name,
+    )
+  );
   await overlayChannel.invokeMethod(
     "ImportImg",
     {
-      "index": id,
+      "id": id,
       "imageName": name,
     },
   );
@@ -67,9 +78,10 @@ Future<void> delete(int id) async {
 
   await overlayChannel.invokeMethod(
     "destroyOverlay",
-    {"index": id},
+    {"id": id},
   );
 }
+
 //----------------------------------
 //----------------------------------
 /// ## SECTION: BUTTONS 
@@ -88,7 +100,7 @@ class MyApp extends StatelessWidget {
           title: Text('Desktop Buddies!'),
           centerTitle: true,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: Stack(
           children:[
             //IMPORT BUTTON
@@ -101,12 +113,12 @@ class MyApp extends StatelessWidget {
               ),
             ),
             Positioned(
-              top:100,
+              bottom:100,
               right:50,
               child: LayerList()
             ),
             Positioned(
-              top:100,
+              bottom:100,
               left:20,
               child:Library()
             ),
