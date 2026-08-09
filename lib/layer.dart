@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'main.dart';
 import 'package:collection/collection.dart';
+import 'focus.dart';
 
 /// #THIS FILE CONTAINS THE CODE FOR THE LAYER MANAGER SECTION OF THE APP
-
 class LayerData {
   final int id;
   int? displayNumber;
@@ -42,8 +42,12 @@ class LayerManager extends ChangeNotifier {
   int _nextId = 0 ;
   int _nextDisplayNumber = 1;
   final PriorityQueue<int> _freeDisplayNumbers = PriorityQueue<int>();
-
+//FOCUSED layer property
   LayerData? focusedLayer;
+  double? focusedWidth;
+  double? focusedHeight;
+  double? focusedX;
+  double? focusedY;
 
   int reserveId() {
     return _nextId++;
@@ -89,347 +93,38 @@ class LayerManager extends ChangeNotifier {
     notifyListeners();
   }
 // Focus Section
-  void focusLayer(int id) {
+  void focusLayer(int id) async{
     focusedLayer = layers.firstWhere(
       (layer) => layer.id == id,
     );
-
-    notifyListeners();
-  }
-
-  void updateProperty(
-    int id,
-    LayerPropertyType property,
-    String value,
-  ) async{
-
-    final layer = layers.firstWhere(
-      (l) => l.id == id
-    );
-
-    switch(property){
-
-      case LayerPropertyType.name:
-        layer.name = value;
-        break;
-
-      case LayerPropertyType.width:
-        layer.width = double.parse(value);
-        break;
-
-      case LayerPropertyType.height:
-        layer.height = double.parse(value);
-        break;
-
-      case LayerPropertyType.x:
-        layer.x = double.parse(value);
-        break;
-
-      case LayerPropertyType.y:
-        layer.y = double.parse(value);
-        break;
-    }
+    print('tung');
     await overlayChannel.invokeMethod(
-    "updateLayerProperty",
+    "displayInfo",
     {
-
       "id": id,
-
-      "property": property,
-
-      "value": value,
-
-    });
-    notifyListeners();
+    }); //This function works for getting the id, but have to pass it to the focus section,
   }
+
+void updateLayerInfo({
+  required int id,
+  required double width,
+  required double height,
+  required double x,
+  required double y,
+}) {
+  final layer = layers.firstWhere(
+    (layer) => layer.id == id,
+  );
+
+  layer.width = width;
+  layer.height = height;
+  layer.x = x;
+  layer.y = y;
+
+  notifyListeners();
+}
 }
 
-
-/// ## FOCUS PANEL TO MODIFY INFO OF A SELECTED LAYER
-
-class Focus extends StatelessWidget {
-  const Focus({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final layer = Layer.focusedLayer;
-
-    return Container(
-      width: 200,
-      height: 150,
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 0.5,
-        ),
-      ),
-      child: Column(
-        children: [
-
-          LayerProperty(
-            label: "Name",
-            value: layer?.name ?? "",
-            onUpdate: (value){
-              if(layer == null) return;
-               Layer.updateProperty(
-                layer.id,
-                LayerPropertyType.name,
-                value,
-              );
-
-            },
-
-          ),
-
-
-          LayerProperty(
-            label: "Width",
-            value: layer == null
-                ? ""
-                : layer.width.toString(),
-            onUpdate: (value){
-              if(layer == null) return;
-              Layer.updateProperty(
-                layer.id,
-                LayerPropertyType.width,
-                value,
-              );
-            },
-          ),
-
-          LayerProperty(
-
-            label: "Height",
-
-            value: layer == null
-                ? ""
-                : layer.height.toString(),
-
-
-            onUpdate: (value){
-
-              if(layer == null) return;
-
-
-              Layer.updateProperty(
-                layer.id,
-                LayerPropertyType.height,
-                value,
-              );
-
-            },
-
-          ),
-
-
-
-
-          LayerProperty(
-
-            label: "X",
-
-            value: layer == null
-                ? ""
-                : layer.x.toString(),
-
-
-            onUpdate: (value){
-
-              if(layer == null) return;
-
-
-              Layer.updateProperty(
-                layer.id,
-                LayerPropertyType.x,
-                value,
-              );
-
-            },
-
-          ),
-
-
-
-
-
-          LayerProperty(
-
-            label: "Y",
-
-            value: layer == null
-                ? ""
-                : layer.y.toString(),
-
-
-            onUpdate: (value){
-
-              if(layer == null) return;
-
-
-              Layer.updateProperty(
-                layer.id,
-                 LayerPropertyType.y,
-                value,
-              );
-
-            },
-
-          ),
-
-        ],
-      ),
-    );
-  }
-}
-
-//CONSTRUCTOR FOR width, height, x, y and name box
-class LayerProperty extends StatefulWidget {
-
-  final String label;
-  final String value;
-
-  final Function(String) onUpdate;
-
-
-  const LayerProperty({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.onUpdate,
-  });
-
-
-  @override
-  State<LayerProperty> createState() => _LayerPropertyState();
-
-}
-
-
-
-class _LayerPropertyState extends State<LayerProperty> {
-
-  bool editing = false;
-
-  late TextEditingController controller;
-
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = TextEditingController(
-      text: widget.value,
-    );
-  }
-
-
-
-  @override
-  void didUpdateWidget(covariant LayerProperty oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-
-    if(oldWidget.value != widget.value){
-      controller.text = widget.value;
-    }
-  }
-
-
-
-  @override
-  void dispose() {
-
-    controller.dispose();
-
-    super.dispose();
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
-
-
-    return SizedBox(
-
-      height: 25,
-
-
-      child: Row(
-
-        children: [
-
-
-          SizedBox(
-            width: 60,
-            child: Text(widget.label),
-          ),
-
-
-
-          GestureDetector(
-
-            onDoubleTap: () {
-
-              setState(() {
-                editing = true;
-              });
-
-            },
-
-
-            child: Container(
-
-              width: 120,
-
-              height: 20,
-
-
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 0.5,
-                ),
-              ),
-
-
-              child: editing
-
-                  ? TextField(
-
-                      controller: controller,
-
-                      autofocus: true,
-
-
-                      onSubmitted: (value){
-
-                        widget.onUpdate(value);
-
-
-                        setState(() {
-                          editing = false;
-                        });
-
-                      },
-
-                    )
-
-
-                  : Padding(
-
-                      padding:
-                        const EdgeInsets.only(left:4),
-
-                      child: Text(widget.value),
-
-                    ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 
 class LayerList extends StatelessWidget {
@@ -453,7 +148,7 @@ class LayerList extends StatelessWidget {
             itemBuilder: (context, index) {
               final layer = Layer.layers[index];
 
-              return GestureDetector(
+              return GestureDetector( //This should send a request for the selected layer info to swift
                 onTap: () {
                 Layer.focusLayer(layer.id);
                 },

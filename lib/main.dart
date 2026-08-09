@@ -4,6 +4,7 @@ import 'package:window_manager/window_manager.dart';
 import 'library.dart';
 import 'layer.dart';
 import 'buttons.dart'; //implementing heap
+import 'focus.dart';
 
 final Layer = LayerManager(); 
 const overlayChannel = MethodChannel('overlay_window');
@@ -35,6 +36,26 @@ void main() async {
       Layer.importSuccess(
         id,
       );
+
+      break;
+
+    case "layerInfo":
+      print("tung 3"); // for some reason the dragging sends info even when i havent done anything yet
+      final args = Map<String, dynamic>.from(call.arguments);
+      print(args["width"]);
+      Layer.focusedWidth =
+          (args["width"] as num).toDouble();
+
+      Layer.focusedHeight =
+          (args["height"] as num).toDouble();
+
+      Layer.focusedX =
+          (args["x"] as num).toDouble();
+
+      Layer.focusedY =
+          (args["y"] as num).toDouble();
+
+      Layer.notifyListeners();
 
       break;
   }
@@ -121,6 +142,11 @@ class MyApp extends StatelessWidget {
               bottom:100,
               left:20,
               child:Library()
+            ),
+            Positioned(
+              child: FocusSec(),
+              top: 70,
+              right: 300,
             ),
             Positioned(
               top:20,

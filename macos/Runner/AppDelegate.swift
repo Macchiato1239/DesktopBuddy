@@ -55,10 +55,43 @@ class AppDelegate: FlutterAppDelegate {
                     self.destroyOverlay(id: id)
                 }
                 result(nil)
-            default:
+
+            case "updateOverlay":
+
+                if let args = call.arguments as? [String: Any],
+                let id = args["id"] as? Int,
+                let property = args["property"] as? String,
+                let value = args["value"] as? String {
+                    self.updateOverlay(
+                        id: id,
+                        property: property,
+                        value: value
+                    )
+                } else {
+                    print("Invalid updateOverlay arguments")
+                }   
+            case "displayInfo":
+
+                guard let args = call.arguments as? [String: Any],
+                    let id = args["id"] as? Int else {
+                    
+                    result(FlutterError(
+                        code: "INVALID_ARGS",
+                        message: "Missing id",
+                        details: nil
+                    ))
+                    print("tung1")
+                    return
+                }
+
+                self.passLayerInfo(id: id)
+
+                result(nil)
+             default:
             result(
                 FlutterMethodNotImplemented
             )
+
             }
         }
 
@@ -68,7 +101,125 @@ class AppDelegate: FlutterAppDelegate {
 /// ## FUNCTIONS
 
 /// ### CREATING AN OVERLAY to import images/gifs into it
+//make a function getting the id of the layer and send its info back to dart.
+//
 
+    func layerObserver(panel: NSPanel) { // add on creation of layer
+        panel.addObserver(
+            self, //register the function to appdelegate
+            forKeyPath: "frame",
+            options: [.new],
+            context: nil
+        )
+    }
+
+    override func observeValue(
+    forKeyPath keyPath: String?,
+    of object: Any?,
+    change: [NSKeyValueChangeKey : Any]?,
+    context: UnsafeMutableRawPointer?
+    ) {
+    guard keyPath == "frame",
+        let panel = object as? NSPanel else {
+        return
+    }
+
+    guard let id = layerCollection.first(where: {
+        $0.value === panel
+    })?.key else {
+        return
+    }
+ //this should send everything to dart
+    }
+
+    func passLayerInfo(id:Int) {
+        guard let layer=layerCollection[id] else{
+            print("No such id")
+            return
+        }
+
+        var frame=layer.frame
+        print(id, frame.size.width)
+        overlayChannel?.invokeMethod (
+            "layerInfo",
+            arguments: [
+            "id":id,
+            "width": frame.size.width,
+            "height": frame.size.height,
+            "x": frame.origin.x,
+            "y": frame.origin.y
+            ]
+        )
+    }
+
+    func updateOverlay(id:Int, property: String, value: String) {
+        guard let layer=layerCollection[id] else {
+            return
+        }
+
+        switch property {
+        case "width":
+
+            if let width = Double(value) {
+
+                var frame = layer.frame
+
+                frame.size.width = width
+
+                layer.setFrame(
+                    frame,
+                    display: true
+                )
+            }
+
+        case "height":
+
+            if let height = Double(value) {
+
+                var frame = layer.frame
+
+                frame.size.height = height
+
+                layer.setFrame(
+                    frame,
+                    display: true
+                )
+            }
+
+        case "x":
+
+            if let x = Double(value) {
+
+                var frame = layer.frame
+
+                frame.origin.x = x
+
+                layer.setFrame(
+                    frame,
+                    display: true
+                )
+            }
+
+        case "y":
+
+            if let y = Double(value) {
+
+                var frame = layer.frame
+
+                frame.origin.y = y
+
+                layer.setFrame(
+                    frame,
+                    display: true
+                )
+            }
+        case "name":
+            print("Tung tung sahur")
+            //No need for changing name
+        default:
+            print("Unknown property: \(property)")
+        }
+    }
   func createOverlay(id:Int) {
       let window = NSPanel( //Variable for the child transparent frame
           contentRect: NSRect(
@@ -113,6 +264,9 @@ class AppDelegate: FlutterAppDelegate {
 
       layerCollection[id]=window //--saving the overlay to the dict with an index key
       window.orderFront(nil)
+      layerObserver(
+        panel: window
+      )
   }
 
 /// ### DESTROYING THE OVERLAY
