@@ -39,10 +39,10 @@ void main() async {
 
       break;
 
-    case "layerInfo":
-      print("tung 3"); // for some reason the dragging sends info even when i havent done anything yet
+    case "layerInfo":// for some reason the dragging sends info even when i havent done anything yet
       final args = Map<String, dynamic>.from(call.arguments);
-      print(args["width"]);
+      var passedId=args["id"];
+      if (passedId==Layer.focusedLayer?.id) { //check if the info sent belongs to the focused layer or not, if not then ignore
       Layer.focusedWidth =
           (args["width"] as num).toDouble();
 
@@ -56,8 +56,9 @@ void main() async {
           (args["y"] as num).toDouble();
 
       Layer.notifyListeners();
-
+      }
       break;
+
   }
 
 });

@@ -97,7 +97,6 @@ class LayerManager extends ChangeNotifier {
     focusedLayer = layers.firstWhere(
       (layer) => layer.id == id,
     );
-    print('tung');
     await overlayChannel.invokeMethod(
     "displayInfo",
     {

@@ -129,7 +129,8 @@ class AppDelegate: FlutterAppDelegate {
     })?.key else {
         return
     }
- //this should send everything to dart
+
+    passLayerInfo(id: id) //this should send everything to dart
     }
 
     func passLayerInfo(id:Int) {
