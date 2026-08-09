@@ -27,36 +27,80 @@ class FocusSec extends StatelessWidget {
               LayerProperty(
                 label: "Name",
                 value: Layer.focusedLayer?.name ?? "",
-                onUpdate: (value){
-                },
+                onUpdate: (value) {
+                  final layer = Layer.focusedLayer;
 
+                  if (layer == null) return;
+
+                  modifyLayer(
+                    id: layer.id,
+                    property: "width",
+                    change: value,
+                  );
+                },
               ),
 
               LayerProperty(
                 label: "Width",
                 value:  Layer.focusedWidth?.toString() ?? "",
-                onUpdate: (value){
+                onUpdate: (value) {
+                  final layer = Layer.focusedLayer;
+
+                  if (layer == null) return;
+
+                  modifyLayer(
+                    id: layer.id,
+                    property: "width",
+                    change: value,
+                  );
                 },
               ),
 
               LayerProperty(
                 label: "Height",
                 value: Layer.focusedHeight?.toString() ?? "",
-                onUpdate: (value){
+                onUpdate: (value) {
+                  final layer = Layer.focusedLayer;
+
+                  if (layer == null) return;
+
+                  modifyLayer(
+                    id: layer.id,
+                    property: "height",
+                    change: value,
+                  );
                 },
               ),
 
               LayerProperty(
                 label: "X",
                 value: Layer.focusedX?.toString() ?? "",
-                onUpdate: (value){
+                onUpdate: (value) {
+                  final layer = Layer.focusedLayer;
+
+                  if (layer == null) return;
+
+                  modifyLayer(
+                    id: layer.id,
+                    property: "x",
+                    change: value,
+                  );
                 },
               ),
 
               LayerProperty(
                 label: "Y",
                 value: Layer.focusedY?.toString() ?? "",
-                onUpdate: (value){
+                onUpdate: (value) {
+                  final layer = Layer.focusedLayer;
+
+                  if (layer == null) return;
+
+                  modifyLayer(
+                    id: layer.id,
+                    property: "y",
+                    change: value,
+                  );
                 },
               ),
             ],
@@ -65,6 +109,22 @@ class FocusSec extends StatelessWidget {
       );
     }
   }
+
+
+void modifyLayer({
+  required int id,
+  required String property,
+  required String change, 
+}) async{
+    await overlayChannel.invokeMethod(
+    "modifyProperty",
+    {
+      "id": id,
+      "property": property,
+      "change": change,
+    },
+  );
+}
 
 
 class LayerProperty extends StatefulWidget {
@@ -158,7 +218,8 @@ class _LayerPropertyState extends State<LayerProperty> {
                       controller: controller,
                       autofocus: true,
                       onSubmitted: (value){
-                        widget.onUpdate(value);
+                        widget.onUpdate(value); //on submit->Change the value of the focus layer
+                        //send message to swift and modify the property of the layer
 
                         setState(() {
                           editing = false;

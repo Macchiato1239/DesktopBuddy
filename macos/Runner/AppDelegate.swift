@@ -87,6 +87,22 @@ class AppDelegate: FlutterAppDelegate {
                 self.passLayerInfo(id: id)
 
                 result(nil)
+            case "modifyProperty":
+                guard let args = call.arguments as? [String: Any],
+                    let id = args["id"] as? Int,
+                    let property = args["property"] as? String,
+                    let change = args["change"] as? String else {
+                    result(FlutterError(
+                        code: "INVALID_ARGS",
+                        message: "Missing or invalid arguments",
+                        details: nil
+                    ))
+                    return
+                }
+                self.updateOverlay(id:id, property:property, value:change)
+
+                result(nil)
+
              default:
             result(
                 FlutterMethodNotImplemented
@@ -139,7 +155,7 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
 
-        var frame=layer.frame
+        let frame=layer.frame
         print(id, frame.size.width)
         overlayChannel?.invokeMethod (
             "layerInfo",
