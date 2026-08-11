@@ -299,12 +299,24 @@ class AppDelegate: FlutterAppDelegate {
         if let imageURL = imageURL {
 
             createOverlay(id: id)
-            let imageURL = URL(fileURLWithPath: imageURL)
-            guard let image = NSImage(contentsOf: imageURL) else {
-                print("Couldn't load image")
+            let developmentURL = URL(fileURLWithPath: imageURL)
+
+            if let image = NSImage(contentsOf: developmentURL) {
+                displayImage(image, id: id)
                 return
             }
 
+            // If development path didn't work, look inside the
+            // packaged Flutter application.
+            let bundledURL = Bundle.main.bundleURL
+                .appendingPathComponent("Contents/Frameworks/App.framework")
+                .appendingPathComponent("Versions/A/Resources/flutter_assets")
+                .appendingPathComponent(imageURL)
+
+            guard let image = NSImage(contentsOf: bundledURL) else {
+                print("Couldn't load image")
+                return
+            }
             displayImage(image, id: id)
 
         } else {
@@ -364,6 +376,23 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
         displayImage(image, id: id)
+
+    }
+
+
+    //-----
+    override func applicationShouldTerminateAfterLastWindowClosed(
+        _ sender: NSApplication
+    ) -> Bool {
+        return true
+    }
+
+    override func applicationWillTerminate(_ notification: Notification) {
+        for (_, panel) in layerCollection {
+            panel.close()
+        }
+
+        layerCollection.removeAll()
     }
 }
 //------------------------------------------------------
