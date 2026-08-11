@@ -39,8 +39,8 @@ class Library extends StatelessWidget {
                   left: 30,
                   top: 10,
                   child: ElevatedButton(
-                    onPressed: () => builtinLayer("TestIcon"),
-                    child: const Text("Chud 1"),
+                    onPressed: () => builtinLayer("assets/PNGs/noob.png","noob"),
+                    child: const Text("Noob"),
                   ),
                 ),
 
@@ -48,8 +48,8 @@ class Library extends StatelessWidget {
                   left: 30,
                   top: 70,
                   child: ElevatedButton(
-                    onPressed: () => builtinLayer("flower"),
-                    child: const Text("Chud 2"),
+                    onPressed: () => builtinLayer("assets/Gif/doodle.gif","doodle"),
+                    child: const Text("Doodle"),
                   ),
                 ),
               ],

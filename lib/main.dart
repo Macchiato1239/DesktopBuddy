@@ -78,8 +78,8 @@ Future<void> import() async {
   );
 }
 
-Future<void> builtinLayer(String name) async {
-  final id = Layer.reserveId(); //unique identifier
+Future<void> builtinLayer(String URL, name) async {
+  final id = Layer.reserveId(); 
   Layer.addBuiltInLayer(LayerData(
     id: id,
     name: name,
@@ -89,7 +89,7 @@ Future<void> builtinLayer(String name) async {
     "ImportImg",
     {
       "id": id,
-      "imageName": name,
+      "imageURL": URL, //ok might i have got this bit wrong
     },
   );
 }

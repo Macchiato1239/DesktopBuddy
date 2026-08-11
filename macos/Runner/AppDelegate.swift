@@ -40,9 +40,9 @@ class AppDelegate: FlutterAppDelegate {
                     return
                 }
 
-                let imageName = args["imageName"] as? String
+                let imageURL = args["imageURL"] as? String
 
-                self.ImportImg(id: id, imageName: imageName)
+                self.ImportImg(id: id, imageURL: imageURL)
 
                 result(nil)
 
@@ -231,10 +231,10 @@ class AppDelegate: FlutterAppDelegate {
                 )
             }
         case "name":
-            print("Tung tung sahur")
+            print("Tung tung sahur"); //lowkey have to change name
             //No need for changing name
         default:
-            print("Unknown property: \(property)")
+            print("Unknown property")
         }
     }
   func createOverlay(id:Int) {
@@ -295,13 +295,13 @@ class AppDelegate: FlutterAppDelegate {
 
 
 /// ### Importing a supported file types [PNG, GIF] into the created OVERLAY
-    func ImportImg(id: Int, imageName: String?) {
-        if let imageName = imageName {
+    func ImportImg(id: Int, imageURL: String?) {
+        if let imageURL = imageURL {
 
             createOverlay(id: id)
-
-            guard let image = NSImage(named: imageName) else {
-                print("Couldn't load image named \(imageName)")
+            let imageURL = URL(fileURLWithPath: imageURL)
+            guard let image = NSImage(contentsOf: imageURL) else {
+                print("Couldn't load image")
                 return
             }
 

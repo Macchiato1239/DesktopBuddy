@@ -31,12 +31,15 @@ class FocusSec extends StatelessWidget {
                   final layer = Layer.focusedLayer;
 
                   if (layer == null) return;
+                  final displayNumber = layer.displayNumber;
 
-                  modifyLayer(
-                    id: layer.id,
-                    property: "width",
-                    change: value,
-                  );
+                  layer.name=value;
+                  if (displayNumber!=null){
+                    Layer.freeDisplayNumber(displayNumber);
+                    layer.displayNumber=null; //cannot access due to the_
+                    }
+                  Layer.notifyListeners()
+                  ; //should make it so that it counts as a removal from the id list
                 },
               ),
 

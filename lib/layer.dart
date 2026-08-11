@@ -42,6 +42,9 @@ class LayerManager extends ChangeNotifier {
   int _nextId = 0 ;
   int _nextDisplayNumber = 1;
   final PriorityQueue<int> _freeDisplayNumbers = PriorityQueue<int>();
+  void freeDisplayNumber(int displayNumber) {
+  _freeDisplayNumbers.add(displayNumber);
+  }
 //FOCUSED layer property
   LayerData? focusedLayer;
   double? focusedWidth;
