@@ -104,6 +104,13 @@ Future<void> delete(int id) async {
   );
 }
 
+Future<void> toggleVisibility(int id) async { // should save the state of the panel (hidden or not)
+  //Layer.hideLayerById(id); will just change UI
+  await overlayChannel.invokeMethod(
+    "ToggleVisibility",
+    {"id": id},
+  );
+}
 //----------------------------------
 //----------------------------------
 /// ## SECTION: BUTTONS 

@@ -69,7 +69,17 @@ class AppDelegate: FlutterAppDelegate {
                     )
                 } else {
                     print("Invalid updateOverlay arguments")
-                }   
+                }
+
+
+            case "ToggleVisibility":
+                if let args = call.arguments as? [String: Any],
+                let id = args["id"] as? Int {
+
+                    self.toggleVisibility(id: id)
+                }
+                result(nil)
+
             case "displayInfo":
 
                 guard let args = call.arguments as? [String: Any],
@@ -119,6 +129,20 @@ class AppDelegate: FlutterAppDelegate {
 /// ### CREATING AN OVERLAY to import images/gifs into it
 //make a function getting the id of the layer and send its info back to dart.
 //
+
+    func toggleVisibility(id: Int) {
+        print("Hi")
+        guard let panel = layerCollection[id] else {
+            return
+        }
+
+        if panel.isVisible {
+            panel.orderOut(nil)
+        } else {
+            panel.orderFront(nil)
+        }
+    }
+
 
     func layerObserver(panel: NSPanel) { // add on creation of layer
         panel.addObserver(

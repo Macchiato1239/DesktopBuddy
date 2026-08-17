@@ -170,6 +170,13 @@ class LayerList extends StatelessWidget {
                         onPressed: () => delete(layer.id),
                         child: const Text("-"),
                       ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(30, 30),
+                        ),
+                        onPressed: () => toggleVisibility(layer.id),
+                        child: const Text("X"),
+                      ),
                       const SizedBox(width: 8),
                       Text(layer.name),
                     ],

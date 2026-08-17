@@ -1,22 +1,14 @@
-<<<<<<< HEAD
-# buddy
+# Desktop Buddy
+A simple application which let you import pngs, gifs, pjeg from your device and it will stay on top of your screen.
+Only work on Mac(for now).
 
-A new Flutter project.
+# Installation
 
-## Getting Started
+# Use guide
+1. click on <b>import</b> to select local files to use
+2. The library on the left are collections of built in assets ready to use onclick.
+the built in buddy is not animated cuz im lowkey learning animation rn
+# Display and modify buddies' properties.
+1. Clicking on the corresponding buddy's layer name in the right box display its information in the middle property box.
+2. Double clicking on each box inside the property box while locking into a buddy and confirm changes will reposition or resize or rename the buddy.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# DesktopChuds
-Desktop's decoration-gif,img,video
->>>>>>> ac8063a7da474a59aabe94cc0b8f627ebc812caf
