@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 import 'main.dart';
 import 'package:collection/collection.dart';
-import 'focus.dart';
 
 /// #THIS FILE CONTAINS THE CODE FOR THE LAYER MANAGER SECTION OF THE APP
 class LayerData {
@@ -141,8 +139,8 @@ class LayerList extends StatelessWidget {
           width: 200,
           height: 350,
           decoration: BoxDecoration(
-            border: Border.all(width: 0.5),
-            borderRadius: BorderRadius.circular(15),
+            color: Color.fromARGB(255, 255, 247, 217),
+            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 5),
           ),
           child: ListView.builder(
             padding: EdgeInsets.zero,
@@ -158,14 +156,29 @@ class LayerList extends StatelessWidget {
                   height: 40,
                   decoration:BoxDecoration(
                     color: Layer.focusedLayer?.id == layer.id
-                    ? const Color.fromARGB(255, 199, 200, 200)
-                    : const Color.fromARGB(255, 255, 255, 255),
+                    ? const Color.fromARGB(255, 255, 229, 187)
+                    : const Color.fromARGB(255, 255, 247, 217),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: const Color.fromARGB(220, 255, 191, 107),  // Border color
+                        width: 3,          // Border thickness
+                        style: BorderStyle.solid, // Border style (solid or none)
+                      ),
+                    ),
                   ),
                   child: Row(
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(30, 30),
+                          backgroundColor: const Color.fromARGB(255, 255, 247, 217),
+                          side: const BorderSide(
+                            color: Color.fromARGB(220, 255, 191, 107),                // Border color
+                            width: 4,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          ),
                         ),
                         onPressed: () => delete(layer.id),
                         child: const Text("-"),
@@ -173,6 +186,14 @@ class LayerList extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(30, 30),
+                          backgroundColor: const Color.fromARGB(255, 255, 247, 217),
+                          side: const BorderSide(
+                            color: Color.fromARGB(220, 255, 191, 107),                // Border color
+                            width: 4,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          ),
                         ),
                         onPressed: () => toggleVisibility(layer.id),
                         child: const Text("X"),

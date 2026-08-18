@@ -5,6 +5,7 @@ import 'library.dart';
 import 'layer.dart';
 import 'buttons.dart'; //implementing heap
 import 'focus.dart';
+import 'background.dart';
 
 final Layer = LayerManager(); 
 const overlayChannel = MethodChannel('overlay_window');
@@ -129,18 +130,49 @@ class MyApp extends StatelessWidget {
           title: Text('Desktop Buddies!'),
           centerTitle: true,
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 247, 217),
         body: Stack(
           children:[
+            Positioned( //Library shadow
+              bottom:90,
+              left: 30,
+              child: ShadowDrop(200,400)
+            ),
             //IMPORT BUTTON
+            Positioned( //FocusSec shadow
+              top:80,
+              right: 290,
+              child: ShadowDrop(250,210)
+            ),
+            Positioned( //LayerManager shadow
+              bottom:90,
+              right: 40,
+              child: ShadowDrop(200,350)
+            ),
             Positioned(
               top: 60,
-              right:50,
+              right:100,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(30, 30),
+                  backgroundColor: const Color.fromARGB(255, 255, 247, 217),
+                  side: const BorderSide(
+                    color: Color.fromARGB(220, 255, 191, 107),                // Border color
+                    width: 4,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
                 onPressed: import,
-                child: const Text('Import'), // IT CNAJWOJNFIJOWAFIJOAFOIJW GO ANYWEHRE HHAHAHA
+                child: const Text(
+                  'Import',
+                    style: TextStyle(
+                      color: Color.fromARGB(220, 255, 157, 29), // Sets the text color to blue
+                    ),
+                  ),
+                ), // IT CNAJWOJNFIJOWAFIJOAFOIJW GO ANYWEHRE HHAHAHA
               ),
-            ),
             Positioned(
               bottom:100,
               right:50,
@@ -156,29 +188,6 @@ class MyApp extends StatelessWidget {
               top: 70,
               right: 300,
             ),
-            Positioned(
-              top:20,
-              left:30,
-              child:CircularBorderlessButton(
-                text:"",
-                onPressed: ()=>Lighting,
-                width: 35,
-                height: 35,
-                pathfile: 'assets/icon/sun.png'
-              )
-            ),
-            Positioned(
-              top:20,
-              left:90,
-              child:CircularBorderlessButton(
-                text:"",
-                onPressed: ()=>Mute,
-                width: 35,
-                height: 35,
-                pathfile: 'assets/icon/volume.png'
-              )
-            ),
-
             //CREDITS
             Positioned(
               bottom: 10,

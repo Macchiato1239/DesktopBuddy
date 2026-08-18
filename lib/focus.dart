@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'layer.dart';
 //SHOULD ERASE WHEN DELETED
 /// 
 //when does the focus sec get updated?
@@ -22,91 +21,122 @@ class FocusSec extends StatelessWidget {
       animation: Layer,
       builder: (context, child) {
 
-        return Column(
-          children:[
-              LayerProperty(
-                label: "Name",
-                value: Layer.focusedLayer?.name ?? "",
-                onUpdate: (value) {
-                  final layer = Layer.focusedLayer;
+        return Container(
+          width:250,
+          height:210,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 255, 247, 217),
+            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 5),
+          ),
+          child:
+            Column(
+              children:[
+                Positioned(
+                  left: 10,
+                  top: 10,
+                  child: LayerProperty(
+                    label: "Name",
+                    value: Layer.focusedLayer?.name ?? "",
+                    onUpdate: (value) {
+                      final layer = Layer.focusedLayer;
 
-                  if (layer == null) return;
-                  final displayNumber = layer.displayNumber;
+                      if (layer == null) return;
+                      final displayNumber = layer.displayNumber;
 
-                  layer.name=value;
-                  if (displayNumber!=null){
-                    Layer.freeDisplayNumber(displayNumber);
-                    layer.displayNumber=null; //cannot access due to the_
-                    }
-                  Layer.notifyListeners()
-                  ; //should make it so that it counts as a removal from the id list
-                },
-              ),
+                      layer.name=value;
+                      if (displayNumber!=null){
+                        Layer.freeDisplayNumber(displayNumber);
+                        layer.displayNumber=null; //cannot access due to the_
+                        }
+                      Layer.notifyListeners()
+                      ; //should make it so that it counts as a removal from the id list
+                    },
+                  ),
+                ),
 
-              LayerProperty(
-                label: "Width",
-                value:  Layer.focusedWidth?.toString() ?? "",
-                onUpdate: (value) {
-                  final layer = Layer.focusedLayer;
+                Positioned(
+                  left:10,
+                  top: 40,
+                  child: LayerProperty(
+                      label: "Width",
+                      value:  Layer.focusedWidth?.toString() ?? "",
+                      onUpdate: (value) {
+                        final layer = Layer.focusedLayer;
 
-                  if (layer == null) return;
+                        if (layer == null) return;
 
-                  modifyLayer(
-                    id: layer.id,
-                    property: "width",
-                    change: value,
-                  );
-                },
-              ),
+                        modifyLayer(
+                          id: layer.id,
+                          property: "width",
+                          change: value,
+                        );
+                      },
+                    ),
+                  ),
 
-              LayerProperty(
-                label: "Height",
-                value: Layer.focusedHeight?.toString() ?? "",
-                onUpdate: (value) {
-                  final layer = Layer.focusedLayer;
+                  Positioned(
+                    left:10, 
+                    top: 70,
+                    child: LayerProperty(
+                      label: "Height",
+                      value: Layer.focusedHeight?.toString() ?? "",
+                      onUpdate: (value) {
+                        final layer = Layer.focusedLayer;
 
-                  if (layer == null) return;
+                        if (layer == null) return;
 
-                  modifyLayer(
-                    id: layer.id,
-                    property: "height",
-                    change: value,
-                  );
-                },
-              ),
+                        modifyLayer(
+                          id: layer.id,
+                          property: "height",
+                          change: value,
+                        );
+                      },
+                    ),
+                  ),
 
-              LayerProperty(
-                label: "X",
-                value: Layer.focusedX?.toString() ?? "",
-                onUpdate: (value) {
-                  final layer = Layer.focusedLayer;
 
-                  if (layer == null) return;
+                  Positioned(
+                    left:10,
+                    top: 100,
+                    child: LayerProperty(
+                      label: "X",
+                      value: Layer.focusedX?.toString() ?? "",
+                      onUpdate: (value) {
+                        final layer = Layer.focusedLayer;
 
-                  modifyLayer(
-                    id: layer.id,
-                    property: "x",
-                    change: value,
-                  );
-                },
-              ),
+                        if (layer == null) return;
 
-              LayerProperty(
-                label: "Y",
-                value: Layer.focusedY?.toString() ?? "",
-                onUpdate: (value) {
-                  final layer = Layer.focusedLayer;
+                        modifyLayer(
+                          id: layer.id,
+                          property: "x",
+                          change: value,
+                        );
+                      },
+                    ),
+                  ),
 
-                  if (layer == null) return;
 
-                  modifyLayer(
-                    id: layer.id,
-                    property: "y",
-                    change: value,
-                  );
-                },
-              ),
-            ],
+                  Positioned(
+                    left:20,
+                    top: 130,
+                    child:LayerProperty(
+                      label: "Y",
+                      value: Layer.focusedY?.toString() ?? "",
+                      onUpdate: (value) {
+                        final layer = Layer.focusedLayer;
+
+                        if (layer == null) return;
+
+                        modifyLayer(
+                          id: layer.id,
+                          property: "y",
+                          change: value,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              )
           );
         },
       );
@@ -190,12 +220,16 @@ class _LayerPropertyState extends State<LayerProperty> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 25,
+      height: 40,
       child: Row(
         children: [
           SizedBox(
             width: 60,
-            child: Text(widget.label),
+            child: Text(widget.label,
+              style: TextStyle(
+              color: Color.fromARGB(220, 255, 145, 0), 
+              ),
+            ),
           ),
 
           GestureDetector(
@@ -207,13 +241,17 @@ class _LayerPropertyState extends State<LayerProperty> {
             },
             child: Container(
 
-              width: 120,
-              height: 40,
+              width: 150,
+              height: 20,
 
               decoration: BoxDecoration( // i should prolly decorate this later
-                border: Border.all(
-                  width: 0.5,
-                ),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: const Color.fromARGB(220, 255, 191, 107),  // Border color
+                        width: 2,          // Border thickness
+                        style: BorderStyle.solid, // Border style (solid or none)
+                      ),
+                    ),
               ),
 
               child: editing
@@ -233,7 +271,11 @@ class _LayerPropertyState extends State<LayerProperty> {
                   : Padding(
                       padding:
                         const EdgeInsets.only(left:4),
-                      child: Text(widget.value),
+                      child: Text(widget.value,
+                          style: TextStyle(
+                          color: Color.fromARGB(220, 255, 157, 29), 
+                        ),
+                      ),
                     ),
             ),
           ),
