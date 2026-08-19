@@ -140,7 +140,7 @@ class LayerList extends StatelessWidget {
           height: 350,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 255, 247, 217),
-            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 5),
+            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 2),
           ),
           child: ListView.builder(
             padding: EdgeInsets.zero,
@@ -161,7 +161,7 @@ class LayerList extends StatelessWidget {
                     border: Border(
                       bottom: BorderSide(
                         color: const Color.fromARGB(220, 255, 191, 107),  // Border color
-                        width: 3,          // Border thickness
+                        width: 2,          // Border thickness
                         style: BorderStyle.solid, // Border style (solid or none)
                       ),
                     ),
@@ -174,7 +174,7 @@ class LayerList extends StatelessWidget {
                           backgroundColor: const Color.fromARGB(255, 255, 247, 217),
                           side: const BorderSide(
                             color: Color.fromARGB(220, 255, 191, 107),                // Border color
-                            width: 4,
+                            width: 2,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0),
@@ -189,7 +189,7 @@ class LayerList extends StatelessWidget {
                           backgroundColor: const Color.fromARGB(255, 255, 247, 217),
                           side: const BorderSide(
                             color: Color.fromARGB(220, 255, 191, 107),                // Border color
-                            width: 4,
+                            width: 2,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0),

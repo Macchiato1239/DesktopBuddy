@@ -26,7 +26,7 @@ class FocusSec extends StatelessWidget {
           height:210,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 255, 247, 217),
-            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 5),
+            border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 2),
           ),
           child:
             Column(

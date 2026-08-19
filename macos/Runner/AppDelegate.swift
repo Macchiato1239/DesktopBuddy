@@ -350,6 +350,7 @@ class AppDelegate: FlutterAppDelegate {
             }
 
             let openPanel = NSOpenPanel()
+            openPanel.allowedContentTypes = [.png, .gif,.jpeg]
             // ...
 
             openPanel.beginSheetModal(for: window) { [weak self] response in
@@ -373,7 +374,7 @@ class AppDelegate: FlutterAppDelegate {
 
     func displayImage(_ image: NSImage, id: Int) {
         guard let contentView = layerCollection[id]?.contentView else {
-            print("No overlay for index \(index)")
+            print("No overlay for index")
             return
         }
 

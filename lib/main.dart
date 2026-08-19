@@ -158,7 +158,7 @@ class MyApp extends StatelessWidget {
                   backgroundColor: const Color.fromARGB(255, 255, 247, 217),
                   side: const BorderSide(
                     color: Color.fromARGB(220, 255, 191, 107),                // Border color
-                    width: 4,
+                    width: 2,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
