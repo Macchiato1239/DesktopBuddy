@@ -29,7 +29,7 @@ class FocusSec extends StatelessWidget {
             border: Border.all(color: const Color.fromARGB(220, 255, 191, 107),width: 2),
           ),
           child:
-            Column(
+            Stack(
               children:[
                 Positioned(
                   left: 10,
@@ -117,7 +117,7 @@ class FocusSec extends StatelessWidget {
 
 
                   Positioned(
-                    left:20,
+                    left: 10,
                     top: 130,
                     child:LayerProperty(
                       label: "Y",
