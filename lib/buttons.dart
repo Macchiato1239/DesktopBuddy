@@ -122,7 +122,6 @@ class CircularBorderlessButton extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
         ),

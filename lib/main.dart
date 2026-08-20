@@ -15,6 +15,7 @@ void main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
+    titleBarStyle: TitleBarStyle.hidden,
     size: Size(800, 600),
   );
 
@@ -127,7 +128,13 @@ class MyApp extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: Text('Desktop Buddies!'),
+          title: Text('Desktop Buddies!',
+                style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 255, 139, 45),
+                fontSize: 30,
+            ),
+          ),
           centerTitle: true,
         ),
         backgroundColor: const Color.fromARGB(255, 255, 247, 217),
@@ -140,8 +147,8 @@ class MyApp extends StatelessWidget {
             ),
             //IMPORT BUTTON
             Positioned( //FocusSec shadow
-              top:80,
-              right: 290,
+              top:110,
+              right: 280,
               child: ShadowDrop(250,210)
             ),
             Positioned( //LayerManager shadow
@@ -185,17 +192,17 @@ class MyApp extends StatelessWidget {
             ),
             Positioned(
               child: FocusSec(),
-              top: 70,
-              right: 300,
+              top: 100,
+              right: 290,
             ),
             //CREDITS
             Positioned(
               bottom: 10,
-              left: 20,
+              left: 30,
               child: Text("Made by Leo",
               style: TextStyle(
-                color: Colors.grey,
-                fontSize: 10,
+                color: const Color.fromARGB(220, 255, 191, 107),
+                fontSize: 13,
               )
               ),
             ),
@@ -215,24 +222,35 @@ class MyApp extends StatelessWidget {
                       onPressed: Github,
                       width: 40,
                       height: 40,
-                      pathfile: 'assets/icon/github.png'
+                      pathfile: 'assets/icon/orangeGit.png'
                     ),
                     CircularBorderlessButton(
                       text:"",
                       onPressed: Instagram,
                       width: 40,
                       height: 40,
-                      pathfile: 'assets/icon/insta.png'
+                      pathfile: 'assets/icon/orangeInsta.png'
                     ),
                     CircularBorderlessButton(
                       text:"",
                       onPressed: Portfolio,
                       width: 40,
                       height: 40,
-                      pathfile: 'assets/icon/portfolio.png'
+                      pathfile: 'assets/icon/orangeFolder.png'
                     ),
                   ],
                 ),
+              ),
+            ),
+            Positioned( //available file types
+              top: 90,
+              right: 70,
+              child: Text("Accepted File Types \n  png, gif, jpeg",
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: const Color.fromARGB(255, 232, 161, 104),
+                fontSize: 14,
+              )
               ),
             ),
           ],

@@ -19,12 +19,13 @@ class Library extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: const Center(
               child: Text(
                 "Library",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 255, 139, 45),
                   fontSize: 20,
                 ),
               ),
